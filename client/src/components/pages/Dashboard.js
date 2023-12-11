@@ -48,7 +48,7 @@ class Dashboard extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-3 p-sm-2">
+                                {/* <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-info text-white shadow-lg">
                                         <div className="card-body">
                                             <h5 className="card-title">Special title treatment</h5>
@@ -67,7 +67,7 @@ class Dashboard extends Component {
                                             <a href="#" className="btn btn-light">Go somewhere</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

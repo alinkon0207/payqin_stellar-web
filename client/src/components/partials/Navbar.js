@@ -17,7 +17,7 @@ class Navbar extends Component {
         return (
             <div className="container-fluid p-0">
                 <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-                    <a className="navbar-brand" href="/">Brand</a>
+                    <a className="navbar-brand" href="/">PayQin - Stellar</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse"
                             data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                             aria-label="Toggle navigation">

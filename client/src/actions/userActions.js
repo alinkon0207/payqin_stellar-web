@@ -2,7 +2,8 @@ import axios from "axios";
 import {
     GET_ERRORS,
     USER_ADD,
-    USER_UPDATE
+    USER_UPDATE,
+    USER_INVITE
 } from "./types";
 
 export const addUser = (userData, history) => dispatch => {
@@ -28,6 +29,23 @@ export const updateUser = (userData) => dispatch => {
         .then(res =>
             dispatch({
                 type: USER_UPDATE,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    );
+};
+
+
+export const inviteUser = (userData) => dispatch => {
+    axios
+        .post("/api/user-invite", userData)
+        .then(res =>
+            dispatch({
+                type: USER_INVITE,
                 payload: res,
             })
         ).catch(err =>

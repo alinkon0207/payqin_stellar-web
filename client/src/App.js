@@ -19,6 +19,7 @@ import '../node_modules/jquery/dist/jquery.min';
 import '../node_modules/popper.js/dist/popper';
 
 import User from "./components/pages/Users";
+import Invite from "./components/pages/Invite";
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -45,6 +46,7 @@ class App extends Component {
                             <Switch>
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                                 <PrivateRoute exact path="/users" component={User} />
+                                <PrivateRoute exact path="/invite" component={Invite} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>
