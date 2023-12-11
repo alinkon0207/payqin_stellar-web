@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const keys = require('../../config/keys');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 const validateUpdateUserInput = require('../../validation/updateUser');
+const validateInviteInput = require('../../validation/inviteUser');
 const User = require('../../models/User');
 
 router.post('/user-add', (req, res) => {
@@ -79,6 +81,52 @@ router.post('/user-update', (req, res) => {
             });
         } else {
             return res.status(400).json({ message: 'Now user found to update.' });
+        }
+    });
+});
+
+router.post('/user-invite', (req, res) => {
+    const { errors, isValid } = validateInviteInput(req.body);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+    const email = req.body.email;
+    // User.findOne({ email: email }).then(user => {
+    //     if (user) {
+    //         let update = {'email': req.body.email, 'password': user.password};
+    //         User.update({ email: email}, {$set: update}, function(err, result) {
+    //             if (err) {
+    //                 return res.status(400).json({ message: 'Unable to invite user.' });
+    //             } else {
+    //                 return res.status(200).json({ message: 'Invited user successfully. Refreshing data...', success: true });
+    //             }
+    //         });
+    //     } else {
+    //         return res.status(400).json({ message: 'No user found to invite.' });
+    //     }
+    // });
+
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'alinkon0207@gmail.com',
+            pass: 'linkon12#$',
+        },
+    });
+
+    const mailOptions = {
+        from: 'alinkon0207@gmail.com',
+        to: email,
+        subject: 'Invite to PayQin-Stellar',
+        text: req.body.note,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log('Error:', error);
+        } else {
+          console.log('Email sent:', info.response);
         }
     });
 });
