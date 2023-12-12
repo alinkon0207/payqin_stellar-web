@@ -11,30 +11,6 @@ import { inviteUser } from "../../actions/userActions";
 import classnames from "classnames";
 import { toast, ToastContainer} from "react-toastify";
 
-const MyComponent = (props) => {
-    const [selectedOptions, setSelectedOptions] = useState(['view']);
-  
-    const handleSelectChange = (event) => {
-        const selectedValues = Array.from(event.target.selectedOptions, (option) => option.value);
-        setSelectedOptions(selectedValues);
-    };
-  
-    return (
-        <select multiple
-            className={classnames("form-control", {
-                invalid: props.errors.permissions
-            })}
-            value={selectedOptions}
-            onChange={handleSelectChange}
-            required
-        >
-            <option value="view">View accounts</option>
-            <option value="create">Create accounts</option>
-            <option value="pay">Cross-border pay</option>
-        </select>
-    );
-};
-
 class Invite extends Component {
     constructor() {
         super();
@@ -62,7 +38,6 @@ class Invite extends Component {
             permissions: this.state.permissions.toString(),
             note: this.state.note
         };
-        console.log('userData:', userData);
         this.props.inviteUser(userData);
     };
 
@@ -97,7 +72,6 @@ class Invite extends Component {
                                                 <br/>
                                                 <label htmlFor="permissions">Permissions</label>
                                                 <br/>
-                                                {/* <MyComponent errors={errors}/> */}
                                                 <select multiple
                                                     onChange={this.onSelectChange}
                                                     value={this.state.permissions}
