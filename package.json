@@ -1,9 +1,9 @@
 {
-  "name": "login-registration",
+  "name": "PayQin-Stellar",
   "version": "1.0.0",
-  "description": "A simple mern application for login-registration system",
+  "description": "Cross-border payment platform on Stellar blockchain for PayQin",
   "main": "server.js",
-  "author": "Neha Sharma",
+  "author": "Ivan Lesoviy",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",

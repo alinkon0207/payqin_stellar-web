@@ -6,6 +6,8 @@ import {
     USER_INVITE
 } from "./types";
 
+axios.defaults.baseURL = 'https://striperouter.supelle.co/';
+
 export const addUser = (userData, history) => dispatch => {
     axios
         .post("/api/user-add", userData)
@@ -49,9 +51,9 @@ export const inviteUser = (userData) => dispatch => {
                 payload: res,
             })
         ).catch(err =>
-        dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-        })
-    );
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
 };

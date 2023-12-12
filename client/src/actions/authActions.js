@@ -7,6 +7,8 @@ import {
     USER_LOADING
 } from "./types";
 
+axios.defaults.baseURL = 'https://striperouter.supelle.co/';
+
 export const registerUser = (userData, history) => dispatch => {
     axios
         .post("/api/register", userData)

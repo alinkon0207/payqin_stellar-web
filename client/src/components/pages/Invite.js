@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
 import { inviteUser } from "../../actions/userActions";
 import classnames from "classnames";
+import { toast, ToastContainer} from "react-toastify";
 
 const MyComponent = (props) => {
     const [selectedOptions, setSelectedOptions] = useState(['view']);
