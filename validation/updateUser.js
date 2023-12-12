@@ -5,6 +5,7 @@ module.exports = function validateUpdateUserInput(data) {
     let errors = {};
     data.name = !isEmpty(data.name) ? data.name : "";
     data.email = !isEmpty(data.email) ? data.email : "";
+    data.permissions = !isEmpty(data.permissions) ? data.permissions : "";
     if (Validator.isEmpty(data.name)) {
         errors.name = "Name field is required";
     }
@@ -12,6 +13,9 @@ module.exports = function validateUpdateUserInput(data) {
         errors.email = "Email field is required";
     } else if (!Validator.isEmail(data.email)) {
         errors.email = "Email is invalid";
+    }
+    if (Validator.isEmpty(data.permissions)) {
+        errors.permissions = "Permissions field is required";
     }
     return {
         errors,

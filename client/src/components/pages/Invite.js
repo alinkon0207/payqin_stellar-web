@@ -1,13 +1,13 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Navbar from "../partials/Navbar";
 import Sidebar from "../partials/Sidebar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
-import {Link} from "react-router-dom";
-import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
 import { inviteUser } from "../../actions/userActions";
+import { deleteMessage } from "../../actions/authActions";
+import { withRouter } from "react-router-dom";
 import classnames from "classnames";
 import { toast, ToastContainer} from "react-toastify";
 
@@ -16,26 +16,45 @@ class Invite extends Component {
         super();
         this.state = {
             email: "",
-            permissions: ['view'],
             note: "",
             errors: {}
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
+        if (nextProps.auth !== undefined
+            && nextProps.auth.user !== undefined
+            && nextProps.auth.user.data !== undefined
+            && nextProps.auth.user.data.message !== undefined) {
+            console.log('toast on invite');
+
+            let oldNotify = localStorage.getItem("notify");
+            let newNotify = JSON.stringify(nextProps.auth.user);
+            if (oldNotify !== newNotify) {
+                localStorage.setItem("notify", newNotify);
+            
+                toast(nextProps.auth.user.data.message, {
+                    position: toast.POSITION.TOP_CENTER
+                });
+
+                this.props.deleteMessage();
+            }
+        }
     }
 
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });
     };
 
-    onSelectChange = e => {
-        const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
-        this.setState({ [e.target.id]: selectedValues });
-    };
-
     onSubmit = e => {
         e.preventDefault();
         const userData = {
             email: this.state.email,
-            permissions: this.state.permissions.toString(),
             note: this.state.note
         };
         this.props.inviteUser(userData);
@@ -70,22 +89,6 @@ class Invite extends Component {
                                                 />
                                                 <span className="text-danger">{errors.email}</span>
                                                 <br/>
-                                                <label htmlFor="permissions">Permissions</label>
-                                                <br/>
-                                                <select multiple
-                                                    onChange={this.onSelectChange}
-                                                    value={this.state.permissions}
-                                                    error={errors.permissions}
-                                                    id="permissions"
-                                                    className={classnames("form-control", {
-                                                        invalid: errors.permissions
-                                                    })}
-                                                >
-                                                    <option value="view">View accounts</option>
-                                                    <option value="create">Create accounts</option>
-                                                    <option value="pay">Cross-border pay</option>
-                                                </select>
-                                                <br/>
                                                 <label htmlFor="Note">Note</label>
                                                 <textarea
                                                     onChange={this.onChange}
@@ -109,6 +112,7 @@ class Invite extends Component {
                         </div>
                     </div>
                 </div>
+                <ToastContainer/>
             </div>
         );
     }
@@ -127,5 +131,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { inviteUser }
-)(Invite);
+    { inviteUser, deleteMessage }
+)(withRouter(Invite));

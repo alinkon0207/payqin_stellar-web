@@ -25,7 +25,7 @@ class Navbar extends Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav ml-auto">
-                            <li className="nav-item dropdown">
+                            {/* <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" href="#" id="settings"
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Settings
@@ -33,7 +33,7 @@ class Navbar extends Component {
                                 <div className="dropdown-menu" aria-labelledby="settings">
                                     <a className="dropdown-item" href="#" onClick={this.onLogoutClick}>Logout</a>
                                 </div>
-                            </li>
+                            </li> */}
                             <li className="nav-item active">
                                 <a className="nav-link" href="#" onClick={this.onLogoutClick}>Logout ({user.name}) <FontAwesomeIcon icon={faSignOutAlt} /> </a>
                             </li>

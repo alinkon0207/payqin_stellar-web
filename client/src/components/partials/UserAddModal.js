@@ -3,6 +3,7 @@ import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { addUser } from "../../actions/userActions";
+import { deleteMessage } from "../../actions/authActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
@@ -18,24 +19,51 @@ class UserAddModal extends React.Component {
             email: "",
             password: "",
             password2: "",
+            permissions: ['view'],
             errors: {},
         };
     }
 
+    componentWillMount(props) {
+        this.setState({
+            name: '',
+            email: '',
+            password: '',
+            password2: '',
+            permissions: []
+        });
+        if (props?.errors) {
+            this.setState({
+                errors: {}
+            });
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
+        console.log('componentWillReceiveProps called!');
         if (nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
             });
         }
         if (nextProps.auth !== undefined
-            && nextProps.auth.user !== undefined
-            && nextProps.auth.user.data !== undefined
-            && nextProps.auth.user.data.message !== undefined) {
+                && nextProps.auth.user !== undefined
+                && nextProps.auth.user.data !== undefined
+                && nextProps.auth.user.data.message !== undefined) {
             $('#add-user-modal').modal('hide');
-            toast(nextProps.auth.user.data.message, {
-                position: toast.POSITION.TOP_CENTER
-            });
+            console.log('toast on add');
+            
+            let oldNotify = localStorage.getItem("notify");
+            let newNotify = JSON.stringify(nextProps.auth.user);
+            if (oldNotify !== newNotify) {
+                localStorage.setItem("notify", newNotify);
+            
+                toast(nextProps.auth.user.data.message, {
+                    position: toast.POSITION.TOP_CENTER
+                });
+    
+                this.props.deleteMessage();
+            }
         }
     }
 
@@ -43,13 +71,20 @@ class UserAddModal extends React.Component {
         this.setState({ [e.target.id]: e.target.value });
     };
 
+    onSelectChange = e => {
+        const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+        this.setState({ [e.target.id]: selectedValues });
+    };
+
     onUserAdd = e => {
+        console.log('adding user...');
         e.preventDefault();
         const newUser = {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
-            password2: this.state.password2
+            password2: this.state.password2,
+            permissions: this.state.permissions.toString()
         };
         this.props.addUser(newUser, this.props.history);
     };
@@ -130,6 +165,7 @@ class UserAddModal extends React.Component {
                                                 autoComplete={''}
                                                 onChange={this.onChange}
                                                 value={this.state.password2}
+                                                error={errors.password2}
                                                 id="password2"
                                                 type="password"
                                                 className={classnames("form-control", {
@@ -137,6 +173,27 @@ class UserAddModal extends React.Component {
                                                 })}
                                             />
                                             <span className="text-danger">{errors.password2}</span>
+                                        </div>
+                                    </div>
+                                    <div className="row mt-2">
+                                        <div className="col-md-3">
+                                            <label htmlFor="permissions">Permissions</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                            <select multiple
+                                                onChange={this.onSelectChange}
+                                                value={this.state.permissions}
+                                                error={errors.permissions}
+                                                id="permissions"
+                                                className={classnames("form-control", {
+                                                    invalid: errors.permissions
+                                                })}
+                                            >
+                                                <option value="view">View accounts</option>
+                                                <option value="create">Create accounts</option>
+                                                <option value="pay">Cross-border pay</option>
+                                            </select>
+                                            <span className="text-danger">{errors.permissions}</span>
                                         </div>
                                     </div>
                                 </form>
@@ -171,5 +228,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addUser }
+    { addUser, deleteMessage }
 )(withRouter(UserAddModal));

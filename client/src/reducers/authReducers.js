@@ -1,8 +1,10 @@
 import {
+    DELETE_MESSAGE,
     SET_CURRENT_USER,
     USER_ADD,
     USER_LOADING,
-    USER_UPDATE
+    USER_UPDATE,
+    USER_INVITE
 } from "../actions/types";
 const isEmpty = require("is-empty");
 const initialState = {
@@ -32,6 +34,25 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 loading: true
+            };
+        case USER_INVITE:
+            return {
+                ...state,
+                isAuthenticated: !isEmpty(action.payload),
+                user: action.payload
+            };
+        case DELETE_MESSAGE:
+            let new_data = {
+                ...state.user.data ? state.user.data : {},
+                message: undefined
+            };
+            let new_user = {
+                ...state.user ? state.user : {},
+                data: new_data
+            };
+            return {
+                ...state,
+                user: new_user
             };
         default:
             return state;

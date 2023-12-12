@@ -3,6 +3,7 @@ import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { updateUser } from "../../actions/userActions";
+import { deleteMessage } from "../../actions/authActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
@@ -17,17 +18,34 @@ class UserUpdateModal extends React.Component {
             id: this.props.record.id,
             name: this.props.record.name,
             email: this.props.record.email,
+            tempId: null,
             password: '',
+            permissions: this.props.record.permissions.split(","),
             errors: {},
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.record) {
+    componentWillMount(props) {
+        this.setState({
+            name: '',
+            email: '',
+            password: '',
+            permissions: []
+        });
+        if (props?.errors) {
             this.setState({
-                id: nextProps.record.id,
+                errors: {}
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.record && this.state.tempId !== nextProps.record.id) {
+            this.setState({
+                id:  nextProps.record.id,
                 name: nextProps.record.name,
-                email: nextProps.record.email,
+                email:  nextProps.record.email,
+                permissions: nextProps.record.permissions.split(",")
             })
         }
         if (nextProps.errors) {
@@ -35,15 +53,32 @@ class UserUpdateModal extends React.Component {
                 errors: nextProps.errors
             });
         }
+
         if (nextProps.auth !== undefined
-            && nextProps.auth.user !== undefined
-            && nextProps.auth.user.data !== undefined
-            && nextProps.auth.user.data.message !== undefined
-            && nextProps.auth.user.data.success) {
+                && nextProps.auth.user !== undefined
+                && nextProps.auth.user.data !== undefined
+                && nextProps.auth.user.data.message !== undefined
+                && nextProps.auth.user.data.success) {
             $('#update-user-modal').modal('hide');
-            toast(nextProps.auth.user.data.message, {
-                position: toast.POSITION.TOP_CENTER
+            console.log('toast on update');
+            this.setState({
+                tempId: null
             });
+            let oldNotify = localStorage.getItem("notify");
+            let newNotify = JSON.stringify(nextProps.auth.user);
+            if (oldNotify !== newNotify) {
+                localStorage.setItem("notify", newNotify);
+            
+                toast(nextProps.auth.user.data.message, {
+                    position: toast.POSITION.TOP_CENTER
+                });
+
+                this.props.deleteMessage();
+
+                setTimeout(() => {
+                    this.getData();
+                }, 1000);
+            }
         }
     }
 
@@ -59,14 +94,26 @@ class UserUpdateModal extends React.Component {
         }
     };
 
+    onSelectChange = e => {
+        if (e.target.id === 'user-update-permissions') {
+            const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+            this.setState({ permissions: selectedValues });
+        }
+    };
+
     onUserUpdate = e => {
+        console.log('updating user...');
         e.preventDefault();
         const newUser = {
             _id: this.state.id,
             name: this.state.name,
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            permissions: this.state.permissions.toString(),
         };
+        this.setState({
+            tempId: this.state.id,
+        })
         this.props.updateUser(newUser);
     };
 
@@ -74,7 +121,7 @@ class UserUpdateModal extends React.Component {
         const { errors } = this.state;
         return (
             <div>
-                <div className="modal fade" id="update-user-modal">
+                <div className="modal fade " id="update-user-modal">
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -143,6 +190,27 @@ class UserUpdateModal extends React.Component {
                                             <span className="text-danger">{errors.password}</span>
                                         </div>
                                     </div>
+                                    <div className="row mt-2">
+                                        <div className="col-md-3">
+                                            <label htmlFor="permissions">Permissions</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                            <select multiple
+                                                onChange={this.onSelectChange}
+                                                value={this.state.permissions}
+                                                error={errors.permissions}
+                                                id="user-update-permissions"
+                                                className={classnames("form-control", {
+                                                    invalid: errors.permissions
+                                                })}
+                                            >
+                                                <option value="view">View accounts</option>
+                                                <option value="create">Create accounts</option>
+                                                <option value="pay">Cross-border pay</option>
+                                            </select>
+                                            <span className="text-danger">{errors.permissions}</span>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             <div className="modal-footer">
@@ -175,5 +243,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { updateUser }
+    { updateUser, deleteMessage }
 )(withRouter(UserUpdateModal));

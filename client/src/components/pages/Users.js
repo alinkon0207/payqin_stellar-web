@@ -6,6 +6,7 @@ import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import ReactDatatable from '@ashvin27/react-datatable';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
+import { deleteMessage } from "../../actions/authActions";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import UserAddModal from "../partials/UserAddModal";
@@ -36,6 +37,13 @@ class Users extends Component {
                 key: "email",
                 text: "Email",
                 className: "email",
+                align: "left",
+                sortable: true
+            },
+            {
+                key: "permissions",
+                text: "Permissions",
+                className: "permissions",
                 align: "left",
                 sortable: true
             },
@@ -113,6 +121,7 @@ class Users extends Component {
                 email: '',
                 password: '',
                 password2: '',
+                permissions: ''
             }
         };
 
@@ -145,13 +154,25 @@ class Users extends Component {
             .post("/api/user-delete", {_id: record._id})
             .then(res => {
                 if (res.status === 200) {
-                   toast(res.data.message, {
-                       position: toast.POSITION.TOP_CENTER,
-                   })
+                    console.log('toast on delete');
+                    
+                    let oldNotify = localStorage.getItem("notify");
+                    let newNotify = JSON.stringify(res.data?.user);
+                    if (oldNotify !== newNotify) {
+                        localStorage.setItem("notify", newNotify);
+                    
+                        toast(res.data?.message, {
+                            position: toast.POSITION.TOP_CENTER
+                        });
+                        this.props.deleteMessage();
+
+                        setTimeout(() => {
+                            this.getData();
+                        }, 1000);
+                    }
                 }
             })
             .catch();
-        this.getData();
     }
 
     pageChange(pageData) {
@@ -197,5 +218,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-    mapStateToProps
+    mapStateToProps, 
+    { deleteMessage }
 )(Users);
