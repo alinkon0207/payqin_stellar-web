@@ -21,8 +21,8 @@ const Sidebar = () => {
                 <Link to="/dashboard" className="list-group-item list-group-item-action">Dashboard</Link>
                 <Link to="/users" className="list-group-item list-group-item-action">Users</Link>
                 <Link to="/invite" className="list-group-item list-group-item-action">Invite</Link>
-                <Link to="/account_wallets" className="list-group-item list-group-item-action">Account Wallets</Link>
-                <Link to="/create_account" className="list-group-item list-group-item-action">Create account</Link>
+                <Link to="/user_wallets" className="list-group-item list-group-item-action">User Wallets</Link>
+                <Link to="/create_wallet" className="list-group-item list-group-item-action">Create wallet</Link>
                 <button className="list-group-item list-group-item-action" onClick={(e) => onLogoutClick(e)}>Logout <FontAwesomeIcon icon={faSignOutAlt} /></button>
             </div>
         </div>
