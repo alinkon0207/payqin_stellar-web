@@ -1,43 +1,32 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSignOutAlt} from "@fortawesome/free-solid-svg-icons";
-import {connect} from "react-redux";
-import {logoutUser} from "../../actions/authActions";
-import {Link} from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../../actions/authActions";
+import { Link } from "react-router-dom";
 
-class Sidebar extends Component {
+const Sidebar = () => {
 
-    onLogoutClick = e => {
+    const dispatch = useDispatch();
+
+    const onLogoutClick = e => {
         e.preventDefault();
-        this.props.logoutUser();
+        dispatch(logoutUser());
     };
 
-    render() {
-        //const { user } = this.props.auth;
-        return (
-            <div className="border-right h-100" id="sidebar-wrapper">
-                <div className="list-group list-group-flush">
-                    <Link to="/dashboard" className="list-group-item list-group-item-action">Dashboard</Link>
-                    <Link to="/users" className="list-group-item list-group-item-action">Users</Link>
-                    <Link to="/invite" className="list-group-item list-group-item-action">Invite</Link>
-                    <button className="list-group-item list-group-item-action" onClick={this.onLogoutClick}>Logout <FontAwesomeIcon icon={faSignOutAlt} /></button>
-                </div>
+    return (
+        <div className="border-right h-100" id="sidebar-wrapper">
+            <div className="list-group list-group-flush">
+                <Link to="/dashboard" className="list-group-item list-group-item-action">Dashboard</Link>
+                <Link to="/users" className="list-group-item list-group-item-action">Users</Link>
+                <Link to="/invite" className="list-group-item list-group-item-action">Invite</Link>
+                <Link to="/account_wallets" className="list-group-item list-group-item-action">Account Wallets</Link>
+                <Link to="/create_account" className="list-group-item list-group-item-action">Create account</Link>
+                <button className="list-group-item list-group-item-action" onClick={(e) => onLogoutClick(e)}>Logout <FontAwesomeIcon icon={faSignOutAlt} /></button>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
-Sidebar.propTypes = {
-    logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-    auth: state.auth
-});
-
-export default connect(
-    mapStateToProps,
-    { logoutUser }
-)(Sidebar);
+export default Sidebar;
