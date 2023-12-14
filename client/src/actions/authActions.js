@@ -12,7 +12,7 @@ axios.defaults.baseURL = 'https://striperouter.supelle.co/';
 
 export const registerUser = (userData, history) => dispatch => {
     axios
-        .post("/api/register", userData)
+        .post("/anchor_api/register", userData)
         .then(res => history.push("/login"))
         .catch(err =>
             dispatch({
@@ -24,7 +24,7 @@ export const registerUser = (userData, history) => dispatch => {
 
 export const loginUser = userData => dispatch => {
     axios
-        .post("/api/login", userData)
+        .post("/anchor_api/login", userData)
         .then(res => {
             const { token } = res.data;
             localStorage.setItem("jwtToken", token);

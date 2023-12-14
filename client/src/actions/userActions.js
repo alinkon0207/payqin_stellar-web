@@ -10,7 +10,7 @@ axios.defaults.baseURL = 'https://striperouter.supelle.co/';
 
 export const addUser = (userData, history) => dispatch => {
     axios
-        .post("/api/user-add", userData)
+        .post("/anchor_api/user-add", userData)
         .then(res => {
                 console.log('add success');
                 dispatch({
@@ -31,7 +31,7 @@ export const addUser = (userData, history) => dispatch => {
 
 export const updateUser = (userData) => dispatch => {
     axios
-        .post("/api/user-update", userData)
+        .post("/anchor_api/user-update", userData)
         .then(res =>
             dispatch({
                 type: USER_UPDATE,
@@ -48,7 +48,7 @@ export const updateUser = (userData) => dispatch => {
 
 export const inviteUser = (userData) => dispatch => {
     axios
-        .post("/api/user-invite", userData)
+        .post("/anchor_api/user-invite", userData)
         .then(res =>
             dispatch({
                 type: USER_INVITE,

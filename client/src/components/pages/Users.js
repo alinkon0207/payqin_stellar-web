@@ -138,7 +138,7 @@ class Users extends Component {
 
     getData() {
         axios
-            .post("/api/user-data")
+            .post("/anchor_api/user-data")
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -151,7 +151,7 @@ class Users extends Component {
 
     deleteRecord(record) {
         axios
-            .post("/api/user-delete", {_id: record._id})
+            .post("/anchor_api/user-delete", {_id: record._id})
             .then(res => {
                 if (res.status === 200) {
                     console.log('toast on delete');
