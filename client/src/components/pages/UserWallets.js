@@ -28,39 +28,24 @@ class UserWallets extends Component {
             },
             {
                 key: "name",
-                text: "Name",
+                text: "Wallet Address",
                 className: "name",
                 align: "left",
                 sortable: true,
             },
             {
                 key: "email",
-                text: "Email",
+                text: "Owner",
                 className: "email",
                 align: "left",
                 sortable: true
             },
             {
                 key: "permissions",
-                text: "Permissions",
+                text: "Balances",
                 className: "permissions",
                 align: "left",
-                sortable: true
-            },
-            {
-                key: "date",
-                text: "Date",
-                className: "date",
-                align: "left",
-                sortable: true
-            },
-            {
-                key: "action",
-                text: "Action",
-                className: "action",
-                width: 100,
-                align: "left",
-                sortable: false,
+                sortable: true,
                 cell: record => {
                     return (
                         <Fragment>
@@ -70,17 +55,33 @@ class UserWallets extends Component {
                                 className="btn btn-primary btn-sm"
                                 onClick={() => this.editRecord(record)}
                                 style={{ marginRight: '5px' }}>
-                                <i className="fa fa-edit"></i>
-                            </button>
-                            <button
-                                className="btn btn-danger btn-sm"
-                                onClick={() => this.deleteRecord(record)}>
-                                <i className="fa fa-trash"></i>
+                                <i class="fa fa-balance-scale" aria-hidden="true"></i>
                             </button>
                         </Fragment>
                     );
                 }
-            }
+            },
+            {
+                key: "date",
+                text: "Details",
+                className: "date",
+                align: "left",
+                sortable: true,
+                cell: record => {
+                    return (
+                        <Fragment>
+                            <button
+                                data-toggle="modal"
+                                data-target="#update-user-modal"
+                                className="btn btn-primary btn-sm"
+                                onClick={() => this.editRecord(record)}
+                                style={{ marginRight: '5px' }}>
+                                <i class="fa fa-info" aria-hidden="true"></i>
+                            </button>
+                        </Fragment>
+                    );
+                }
+            },
         ];
 
         this.config = {
@@ -187,11 +188,11 @@ class UserWallets extends Component {
                     <Sidebar />
                     <UserAddModal />
                     <UserUpdateModal record={this.state.currentRecord} />
-                    <div id="page-content-wrapper1">
+                    <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList} /></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus} /> Add User</button>
-                            <h1 className="mt-2 text-primary">Users List</h1>
+                            <h1 className="mt-2 text-primary">User Wallets</h1>
                             <ReactDatatable
                                 config={this.config}
                                 records={this.state.records}

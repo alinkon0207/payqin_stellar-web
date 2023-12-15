@@ -6,25 +6,25 @@ import {
     USER_INVITE
 } from "./types";
 
-axios.defaults.baseURL = 'https://striperouter.supelle.co/';
+axios.defaults.baseURL = 'https://blocktestingto.com/api/';
 
 export const addUser = (userData, history) => dispatch => {
     axios
         .post("/anchor_api/user-add", userData)
         .then(res => {
-                console.log('add success');
-                dispatch({
-                    type: USER_ADD,
-                    payload: res,
-                })
-            }
+            console.log('add success');
+            dispatch({
+                type: USER_ADD,
+                payload: res,
+            })
+        }
         ).catch(err => {
-                console.log('add failure');
-                dispatch({
-                    type: GET_ERRORS,
-                    payload: err.response.data
-                })
-            }
+            console.log('add failure');
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        }
         );
 };
 

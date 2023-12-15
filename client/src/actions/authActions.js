@@ -8,7 +8,7 @@ import {
     DELETE_MESSAGE
 } from "./types";
 
-axios.defaults.baseURL = 'https://striperouter.supelle.co/';
+axios.defaults.baseURL = 'http://loacalhost:5000/';
 
 export const registerUser = (userData, history) => dispatch => {
     axios

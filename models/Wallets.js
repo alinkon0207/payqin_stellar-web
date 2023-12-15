@@ -1,31 +1,30 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const UserSchema = new Schema({
-    name: {
+const WalletSchema = new Schema({
+    wallet: {
         type: String,
         required: true
     },
-    email: {
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    },
+    pubKey: {
         type: String,
-        unique: true,
         required: true
     },
-    password: {
-        type: String,
-        required: true
-    },
-    permissions: {
+    prKey: {
         type: String,
         required: true
     }
 }, { timestamps: true });
 
-UserSchema.virtual('id').get(function () {
+WalletSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-UserSchema.set('toJSON', {
+WalletSchema.set('toJSON', {
     virtuals: true
 });
 
-module.exports = User = mongoose.model("users", UserSchema);
+module.exports = User = mongoose.model("wallets", WalletSchema);
