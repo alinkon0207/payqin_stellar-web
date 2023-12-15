@@ -70,7 +70,7 @@ const CreateWallet = () => {
                                         <p className="card-text ">YOUR SECRET KEY</p>
                                         <input className="card-text w-100 p-2" placeholder="Starts with S, example: SCHK...ZLJK"
                                             value={importingPrKey}
-                                            change={e => setImportingPrKey(e.target.value)}
+                                            onChange={e => {setImportingPrKey(e.target.value)}}
                                         ></input>
                                         <br></br>
                                         <input className="card-text w-100 p-2 mt-3 " placeholder="Public key"
