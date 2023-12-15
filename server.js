@@ -4,18 +4,19 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const users = require('./routes/api/users');
+const wallets = require('./routes/api/wallets');
 
 require('./config/passport')(passport);
 
 const app = express();
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
 
@@ -31,6 +32,7 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use(passport.initialize());
 
 app.use('/anchor_api', users);
+app.use('/anchor_wallet_api', wallets);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
