@@ -120,17 +120,15 @@ class WalletTransacions extends Component {
                 <Navbar />
                 <div className="d-flex" id="wrapper">
                     <Sidebar />
-                    <div id="page-content-wrapper">
-                        <div className="container-fluid">
-                            <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList} /></button>
-                            <h1 className="mt-2 text-primary">Wallet Transactions</h1>
-                            <ReactDatatable
-                                config={this.config}
-                                records={this.state.records}
-                                columns={this.columns}
-                                onPageChange={this.pageChange.bind(this)}
-                            />
-                        </div>
+                    <div className="container-fluid">
+                        <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList} /></button>
+                        <h1 className="mt-2 text-primary">Wallet Transactions</h1>
+                        <ReactDatatable
+                            config={this.config}
+                            records={this.state.records}
+                            columns={this.columns}
+                            onPageChange={this.pageChange.bind(this)}
+                        />
                     </div>
                     <ToastContainer />
                 </div>

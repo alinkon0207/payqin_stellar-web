@@ -60,8 +60,6 @@ class UserWallets extends Component {
                     return (
                         <Fragment>
                             <button
-                                data-toggle="modal"
-                                data-target="#update-user-modal"
                                 className="btn btn-primary btn-sm"
                                 onClick={() => this.props.history.push(`/wallet_balances/${record?.pubKey}`)}
                                 style={{ marginRight: '5px' }}>
@@ -83,12 +81,10 @@ class UserWallets extends Component {
                     return (
                         <Fragment>
                             <button
-                                data-toggle="modal"
-                                data-target="#update-user-modal"
                                 className="btn btn-primary btn-sm"
                                 onClick={() => this.props.history.push(`/wallet_transactions/${record?.pubKey}`)}
                                 style={{ marginRight: '5px' }}>
-                                <i class="fa fa-info mr-2" aria-hidden="true">
+                                <i className="fa fa-info mr-2" aria-hidden="true">
                                 </i>
                                 Details
                             </button>
