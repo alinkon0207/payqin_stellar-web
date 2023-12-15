@@ -34,7 +34,7 @@ router.post('/wallet-add', (req, res) => {
 });
 
 router.post('/wallet-data', (req, res) => {
-    Wallet.find({}).select(['-password']).then(user => {
+    Wallet.find({}).populate("user").select(['-prKey']).then(user => {
         if (user) {
             return res.status(200).send(user);
         }

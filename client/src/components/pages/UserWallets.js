@@ -27,23 +27,33 @@ class UserWallets extends Component {
                 sortable: true,
             },
             {
-                key: "name",
+                key: "pubKey",
                 text: "Wallet Address",
-                className: "name",
+                className: "pubKey",
                 align: "left",
                 sortable: true,
+                cell: record => {
+                    return (
+                        <div className="">{this.showShortifyedWalletAddress(record?.pubKey)}</div>
+                    );
+                }
             },
             {
-                key: "email",
+                key: "user",
                 text: "Owner",
-                className: "email",
+                className: "user",
                 align: "left",
-                sortable: true
+                sortable: true,
+                cell: record => {
+                    return (
+                        <div className="">{record?.user?.email}</div>
+                    );
+                }
             },
             {
-                key: "permissions",
+                key: "balances",
                 text: "Balances",
-                className: "permissions",
+                className: "balances",
                 align: "left",
                 sortable: true,
                 cell: record => {
@@ -53,18 +63,20 @@ class UserWallets extends Component {
                                 data-toggle="modal"
                                 data-target="#update-user-modal"
                                 className="btn btn-primary btn-sm"
-                                onClick={() => this.editRecord(record)}
+                                onClick={() => this.props.history.push(`/wallet_balances/${record?.pubKey}`)}
                                 style={{ marginRight: '5px' }}>
-                                <i class="fa fa-balance-scale" aria-hidden="true"></i>
+                                <i className="fa fa-balance-scale mr-2" aria-hidden="true">
+                                </i>
+                                Details
                             </button>
                         </Fragment>
                     );
                 }
             },
             {
-                key: "date",
-                text: "Details",
-                className: "date",
+                key: "details",
+                text: "Transactions",
+                className: "details",
                 align: "left",
                 sortable: true,
                 cell: record => {
@@ -74,9 +86,11 @@ class UserWallets extends Component {
                                 data-toggle="modal"
                                 data-target="#update-user-modal"
                                 className="btn btn-primary btn-sm"
-                                onClick={() => this.editRecord(record)}
+                                onClick={() => this.props.history.push(`/wallet_transactions/${record?.pubKey}`)}
                                 style={{ marginRight: '5px' }}>
-                                <i class="fa fa-info" aria-hidden="true"></i>
+                                <i class="fa fa-info mr-2" aria-hidden="true">
+                                </i>
+                                Details
                             </button>
                         </Fragment>
                     );
@@ -127,6 +141,7 @@ class UserWallets extends Component {
         };
 
         this.getData = this.getData.bind(this);
+        this.showShortifyedWalletAddress = this.showShortifyedWalletAddress.bind(this);
     }
 
     componentDidMount() {
@@ -137,10 +152,21 @@ class UserWallets extends Component {
         this.getData()
     }
 
+    showShortifyedWalletAddress(strWallet) {
+
+        if (strWallet?.toString()?.length >= 56) {
+            let temp = strWallet;
+            temp = temp?.toString()?.substring(0, 5) + "..." + temp?.toString()?.substring(51, 56);
+            return temp;
+        }
+        return strWallet;
+    }
+
     getData() {
         axios
-            .post("/anchor_api/user-data")
+            .post("/anchor_wallet_api/wallet-data")
             .then(res => {
+                console.log(res);
                 this.setState({ records: res.data })
             })
             .catch()
@@ -148,32 +174,6 @@ class UserWallets extends Component {
 
     editRecord(record) {
         this.setState({ currentRecord: record });
-    }
-
-    deleteRecord(record) {
-        axios
-            .post("/anchor_api/user-delete", { _id: record._id })
-            .then(res => {
-                if (res.status === 200) {
-                    console.log('toast on delete');
-
-                    let oldNotify = localStorage.getItem("notify");
-                    let newNotify = JSON.stringify(res.data?.user);
-                    if (oldNotify !== newNotify) {
-                        localStorage.setItem("notify", newNotify);
-
-                        toast(res.data?.message, {
-                            position: toast.POSITION.TOP_CENTER
-                        });
-                        this.props.deleteMessage();
-
-                        setTimeout(() => {
-                            this.getData();
-                        }, 1000);
-                    }
-                }
-            })
-            .catch();
     }
 
     pageChange(pageData) {

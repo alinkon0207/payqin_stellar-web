@@ -21,6 +21,8 @@ import '../node_modules/popper.js/dist/popper';
 import User from "./components/pages/Users";
 import UserWallets from "./components/pages/UserWallets";
 import CreateWallet from "./components/pages/CreateWallet";
+import WalletTransactions from "./components/pages/WalletTransactions";
+import WalletBalaces from "./components/pages/WalletBalaces";
 import Invite from "./components/pages/Invite";
 
 if (localStorage.jwtToken) {
@@ -51,6 +53,8 @@ class App extends Component {
                                 <PrivateRoute exact path="/invite" component={Invite} />
                                 <PrivateRoute exact path="/user_wallets" component={UserWallets} />
                                 <PrivateRoute exact path="/create_wallet" component={CreateWallet} />
+                                <PrivateRoute exact path="/wallet_transactions/:wallet" component={WalletTransactions} />
+                                <PrivateRoute exact path="/wallet_balances/:wallet" component={WalletBalaces} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>
