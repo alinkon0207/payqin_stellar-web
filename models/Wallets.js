@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const WalletSchema = new Schema({
-    wallet: {
-        type: String,
-        required: true
-    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
@@ -15,6 +11,7 @@ const WalletSchema = new Schema({
     },
     prKey: {
         type: String,
+        unique: true,
         required: true
     }
 }, { timestamps: true });

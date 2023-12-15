@@ -35,3 +35,28 @@ module.exports = function validateRegisterInput(data) {
         isValid: isEmpty(errors)
     };
 };
+
+module.exports = function isPrKey(strPrKey) {
+    ///check validation of private key
+    //start with S and has capitalized A-Z, has digits 0~9 and has length of 56 chars
+    const regex = /^S[A-Z0-9]{55}$/;
+    return regex.test(strPrKey);
+}
+
+module.exports = function validateWalletAddInput(data) {
+    let errors = {};
+    data.prKey = !isEmpty(data.prKey) ? data.prKey : "";
+    data.userId = !isEmpty(data.userId) ? data.userId : "";
+    if (Validator.isEmpty(data.userId)) {
+        errors.userId = "User ID is required";
+    }
+    if (Validator.isEmpty(data.prKey)) {
+        errors.prKey = "Private key field is required";
+    } else if (!isPrKey(data.prKey)) {
+        errors.prKey = "Private key is invalid";
+    }
+    return {
+        errors,
+        isValid: isEmpty(errors)
+    };
+};

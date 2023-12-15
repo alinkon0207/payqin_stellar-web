@@ -42,10 +42,10 @@ class UserUpdateModal extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.record && this.state.tempId !== nextProps.record.id) {
             this.setState({
-                id:  nextProps.record.id,
+                id: nextProps.record.id,
                 name: nextProps.record.name,
-                email:  nextProps.record.email,
-                permissions: nextProps.record.permissions.split(",")
+                email: nextProps.record.email,
+                permissions: nextProps.record.permissions?.split(",") || []
             })
         }
         if (nextProps.errors) {
@@ -55,10 +55,10 @@ class UserUpdateModal extends React.Component {
         }
 
         if (nextProps.auth !== undefined
-                && nextProps.auth.user !== undefined
-                && nextProps.auth.user.data !== undefined
-                && nextProps.auth.user.data.message !== undefined
-                && nextProps.auth.user.data.success) {
+            && nextProps.auth.user !== undefined
+            && nextProps.auth.user.data !== undefined
+            && nextProps.auth.user.data.message !== undefined
+            && nextProps.auth.user.data.success) {
             $('#update-user-modal').modal('hide');
             console.log('toast on update');
             this.setState({
@@ -68,7 +68,7 @@ class UserUpdateModal extends React.Component {
             let newNotify = JSON.stringify(nextProps.auth.user);
             if (oldNotify !== newNotify) {
                 localStorage.setItem("notify", newNotify);
-            
+
                 toast(nextProps.auth.user.data.message, {
                     position: toast.POSITION.TOP_CENTER
                 });
@@ -135,7 +135,7 @@ class UserUpdateModal extends React.Component {
                                         value={this.state.id}
                                         id="user-update-id"
                                         type="text"
-                                        className="d-none"/>
+                                        className="d-none" />
                                     <div className="row mt-2">
                                         <div className="col-md-3">
                                             <label htmlFor="name">Name</label>
@@ -149,7 +149,7 @@ class UserUpdateModal extends React.Component {
                                                 error={errors.name}
                                                 className={classnames("form-control", {
                                                     invalid: errors.name
-                                                })}/>
+                                                })} />
                                             <span className="text-danger">{errors.name}</span>
                                         </div>
                                     </div>
