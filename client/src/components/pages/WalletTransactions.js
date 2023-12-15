@@ -101,7 +101,7 @@ class WalletTransacions extends Component {
         try {
 
             const { match } = this.props;
-            let trx_response = await axios.get(`https://horizon-futurenet.stellar.org/accounts/${match.params.wallet}/transactions`);
+            let trx_response = await axios.get(`https://horizon.stellar.org/accounts/${match.params.wallet}/transactions`);
             console.log("trx_response  >>> ", trx_response);
             this.setState({ records: trx_response.data?._embedded?.records })
         } catch (err) {
