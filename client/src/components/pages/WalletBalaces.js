@@ -25,7 +25,7 @@ class WalletBalances extends Component {
                 cell: record => {
                     return (
                         <div>
-                            {record?.asset_code === null ? "XLM" : record?.asset_code?.toString()}
+                            {(record?.asset_code === "" || record?.asset_code === null || record?.asset_code === undefined) ? "XLM" : record?.asset_code?.toString()}
                         </div>
                     );
                 }
