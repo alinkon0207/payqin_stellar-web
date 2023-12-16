@@ -37,13 +37,6 @@ class WalletBalances extends Component {
                 align: "left",
                 sortable: true,
             },
-            {
-                key: "buying_liabilities",
-                text: "Initiative",
-                className: "buying_liabilities",
-                align: "left",
-                sortable: true,
-            },
         ];
 
         this.config = {
