@@ -18,10 +18,17 @@ class WalletBalances extends Component {
         this.columns = [
             {
                 key: "asset_type",
-                text: "Native/Token",
+                text: "Token Name",
                 className: "token",
                 align: "left",
                 sortable: true,
+                cell: record => {
+                    return (
+                        <div>
+                            {record?.asset_type?.toString() === "native" ? "XLM" : record?.asset_type?.toString()}
+                        </div>
+                    );
+                }
             },
             {
                 key: "balance",

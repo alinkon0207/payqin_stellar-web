@@ -34,7 +34,7 @@ class UserWallets extends Component {
                 sortable: true,
                 cell: record => {
                     return (
-                        <div className="">{this.showShortifyedWalletAddress(record?.pubKey)}</div>
+                        <div className="">{record?.pubKey}</div>
                     );
                 }
             },
