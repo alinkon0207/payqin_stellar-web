@@ -1,6 +1,7 @@
 const Validator = require("validator");
 const isEmpty = require("is-empty");
-module.exports = function validateRegisterInput(data) {
+
+function validateRegisterInput(data) {
     let errors = {};
     data.name = !isEmpty(data.name) ? data.name : "";
     data.email = !isEmpty(data.email) ? data.email : "";
@@ -36,14 +37,14 @@ module.exports = function validateRegisterInput(data) {
     };
 };
 
-module.exports = function isPrKey(strPrKey) {
+function isPrKey(strPrKey) {
     ///check validation of private key
     //start with S and has capitalized A-Z, has digits 0~9 and has length of 56 chars
     const regex = /^S[A-Z0-9]{55}$/;
     return regex.test(strPrKey);
 }
 
-module.exports = function validateWalletAddInput(data) {
+function validateWalletAddInput(data) {
     let errors = {};
     data.prKey = !isEmpty(data.prKey) ? data.prKey : "";
     data.userId = !isEmpty(data.userId) ? data.userId : "";
@@ -60,3 +61,8 @@ module.exports = function validateWalletAddInput(data) {
         isValid: isEmpty(errors)
     };
 };
+
+module.exports = {
+    validateRegisterInput,
+    validateWalletAddInput
+}

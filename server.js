@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const users = require('./routes/api/users');
+const wallets = require('./routes/api/wallets');
 
 require('./config/passport')(passport);
 
@@ -24,8 +25,10 @@ mongoose.connect(db, { useNewUrlParser: true })
     ).catch(err => console.log(err));
 
 app.use(passport.initialize());
-app.use('/api', users);
+app.use('/anchor_api', users);
+app.use('/anchor_wallet_api', wallets);
 app.use(express.static(path.join(__dirname, 'client/build')));
+
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });

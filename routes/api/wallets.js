@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const keys = require('../../config/keys');
-const validateWalletAddInput = require('../../validation/register');
+const { validateWalletAddInput } = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
 const validateUpdateUserInput = require('../../validation/updateUser');
 const validateInviteInput = require('../../validation/inviteUser');
@@ -17,7 +17,7 @@ router.post('/wallet-add', (req, res) => {
     }
     Wallet.findOne({ prKey: req.body.prKey }).then(user => {
         if (user) {
-            return res.status(400).json({ prKey: 'Wallet already exists' });
+            return res.status(400).json({ message: 'Wallet already exists' });
         } else {
             const newUser = new Wallet({
                 pubKey: req.body.pubKey,
@@ -27,14 +27,14 @@ router.post('/wallet-add', (req, res) => {
             newUser
                 .save()
                 .then(user => {
-                    return res.status(200).json({ message: 'User added successfully. Refreshing data...' })
+                    return res.status(200).json({ message: 'Wallet added successfully. Refreshing data...' })
                 }).catch(err => console.log(err));
         }
     });
 });
 
 router.post('/wallet-data', (req, res) => {
-    Wallet.find({}).select(['-password']).then(user => {
+    Wallet.find({}).populate("user").select(['-prKey']).then(user => {
         if (user) {
             return res.status(200).send(user);
         }

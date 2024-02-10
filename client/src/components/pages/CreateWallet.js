@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import Navbar from "../partials/Navbar";
 import Sidebar from "../partials/Sidebar";
@@ -10,47 +10,92 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { faUserAlt } from "@fortawesome/free-solid-svg-icons/faUserAlt";
 import { faFileImport } from "@fortawesome/free-solid-svg-icons/faFileImport";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Keypair } from "stellar-sdk";
+import { useDebounce } from 'use-debounce';
 
 export function isPrKey(strPrKey) {
-    ///check validation of private key
-    //start with S and has capitalized A-Z, has digits 0~9 and has length of 56 chars
     const regex = /^S[A-Z0-9]{55}$/;
     return regex.test(strPrKey);
 }
 
 const CreateWallet = () => {
 
+    const userId = useSelector(state => state.auth?.user?.id);
     const [importedPubKey, setImportedPubKey] = useState("");
     const [importingPrKey, setImportingPrKey] = useState("");
+    const [debouncedPrKey] = useDebounce(importingPrKey, 500);
     const [generatedPrKey, setGeneratedPrKey] = useState("");
     const [generatedPubKey, setGeneratedPubKey] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
+    useEffect(() => {
+        if (debouncedPrKey !== undefined && debouncedPrKey?.length !== 0 && debouncedPrKey !== null) {
+            if (isPrKey(debouncedPrKey)) {
+            } else {
+                setImportedPubKey("");
+                return;
+            }
+            try {
+                const keypair = Keypair.fromSecret(importingPrKey);
+                const publicKey = keypair.publicKey();
+                setImportedPubKey(publicKey);
+            } catch (e) {
+                setErrorMessage(
+                    `Invalid secret key. Secret keys are uppercase and begin with the letter "S."`,
+                );
+            }
+        }
+    }, [debouncedPrKey])
+
     const importFromPrKey = () => {
-        if (importingPrKey !== undefined && importingPrKey?.length !== 0 && importingPrKey !== null) {
-            if (isPrKey(importingPrKey)) {
+        if (debouncedPrKey !== undefined && debouncedPrKey?.length !== 0 && debouncedPrKey !== null) {
+            if (isPrKey(debouncedPrKey)) {
             } else {
                 toast.warn("The secrete key is invalid.");
                 return;
             }
         }
-        try {
-            const keypair = Keypair.fromSecret(importingPrKey);
-            const publicKey = keypair.publicKey();
-            setImportedPubKey(publicKey);
-            console.log("pubKey >>> ", publicKey);
-
-        } catch (e) {
-            setErrorMessage(
-                `Invalid secret key. Secret keys are uppercase and begin with the letter "S."`,
-            );
-        }
+        axios.post(`${process.env.REACT_APP_BACKEND}/anchor_wallet_api/wallet-add`, {
+            pubKey: importedPubKey,
+            prKey: debouncedPrKey,
+            userId: userId
+        }).then(response => {
+            console.log(response);
+            toast.success("Wallet added successfully!");
+        }).catch(err => {
+            console.error(err);
+        });
     }
 
     const generatePair = () => {
+        try {
+            const keypair = Keypair.random();
+            setGeneratedPubKey(keypair.publicKey());
+            setGeneratedPrKey(keypair.secret());
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
+    const saveGeneratedPair = () => {
+        if (generatedPrKey !== undefined && generatedPrKey?.length !== 0 && generatedPrKey !== null) {
+            if (isPrKey(generatedPrKey)) {
+            } else {
+                toast.warn("The secrete key is invalid.");
+                return;
+            }
+        }
+        axios.post(`${process.env.REACT_APP_BACKEND}/anchor_wallet_api/wallet-add`, {
+            prKey: generatedPrKey,
+            pubKey: generatedPubKey,
+            userId: userId
+        }).then(response => {
+            console.log(response);
+            toast.success("Wallet saved successfully!");
+        }).catch(err => {
+            console.error(err);
+        });
     }
 
     return (
@@ -63,14 +108,14 @@ const CreateWallet = () => {
                         <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList} /></button>
                         <h1 className="mt-2 text-primary">Create a wallet</h1>
                         <div className="row px-2">
-                            <div className="col-sm-3 p-sm-2">
+                            <div className="col-md-6 col-sm-12 p-sm-2">
                                 <div className="card bg-primary text-white shadow-lg">
                                     <div className="card-body">
                                         <h5 className="card-title">Import from private key</h5>
                                         <p className="card-text ">YOUR SECRET KEY</p>
                                         <input className="card-text w-100 p-2" placeholder="Starts with S, example: SCHK...ZLJK"
                                             value={importingPrKey}
-                                            onChange={e => {setImportingPrKey(e.target.value)}}
+                                            onChange={e => { setImportingPrKey(e.target.value) }}
                                         ></input>
                                         <br></br>
                                         <input className="card-text w-100 p-2 mt-3 " placeholder="Public key"
@@ -79,17 +124,21 @@ const CreateWallet = () => {
                                         ></input>
                                         <br></br>
                                         <button className="btn btn-light mt-3 "
+                                            style={{ width: "100px" }}
                                             onClick={() => importFromPrKey()}
-                                        ><FontAwesomeIcon className="text-primary" icon={faFileImport} />&nbsp;Import</button>
+                                        >Import</button>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-sm-3 p-sm-2">
+                        </div>
+                        <div className="row px-2">
+                            <div className="col-md-6 col-sm-12 p-sm-2">
                                 <div className="card bg-secondary text-white shadow-lg">
                                     <div className="card-body">
                                         <h5 className="card-title">Generate key pair</h5>
                                         <p className="card-text">Generate and import your wallet.</p>
                                         <button className="btn btn-light  "
+                                            style={{ width: "100px" }}
                                             onClick={() => generatePair()}
                                         >Generate</button>
 
@@ -105,7 +154,10 @@ const CreateWallet = () => {
                                         ></input>
                                         <br></br>
 
-                                        <button className="btn btn-light mt-3 "><FontAwesomeIcon className="text-primary" icon={faFileImport} />&nbsp;Create</button>
+                                        <button className="btn btn-light mt-3 "
+                                            style={{ width: "100px" }}
+                                            onClick={() => saveGeneratedPair()}
+                                        >Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -113,6 +165,8 @@ const CreateWallet = () => {
                     </div>
                 </div>
             </div>
+
+            <ToastContainer />
         </div>
     );
 
