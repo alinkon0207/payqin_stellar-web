@@ -6,7 +6,7 @@ import {
     USER_INVITE
 } from "./types";
 
-axios.defaults.baseURL = 'https://blocktestingto.com/api/';
+axios.defaults.baseURL = 'https://striperouter.supelle.co'
 
 export const addUser = (userData, history) => dispatch => {
     axios
