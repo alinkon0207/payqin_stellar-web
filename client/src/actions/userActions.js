@@ -6,7 +6,7 @@ import {
     USER_INVITE
 } from "./types";
 
-axios.defaults.baseURL = 'https://striperouter.supelle.co'
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND
 
 export const addUser = (userData, history) => dispatch => {
     axios

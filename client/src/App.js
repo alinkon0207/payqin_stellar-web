@@ -19,11 +19,12 @@ import '../node_modules/jquery/dist/jquery.min';
 import '../node_modules/popper.js/dist/popper';
 
 import User from "./components/pages/Users";
+import Invite from "./components/pages/Invite";
 import UserWallets from "./components/pages/UserWallets";
 import CreateWallet from "./components/pages/CreateWallet";
 import WalletTransactions from "./components/pages/WalletTransactions";
 import WalletBalaces from "./components/pages/WalletBalaces";
-import Invite from "./components/pages/Invite";
+import CrossBorderPayment from "./components/pages/CrossBorderPayment";
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -55,6 +56,7 @@ class App extends Component {
                                 <PrivateRoute exact path="/create_wallet" component={CreateWallet} />
                                 <PrivateRoute exact path="/wallet_transactions/:wallet" component={WalletTransactions} />
                                 <PrivateRoute exact path="/wallet_balances/:wallet" component={WalletBalaces} />
+                                <PrivateRoute exact path="/cross_border_payment" component={CrossBorderPayment} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

@@ -23,6 +23,7 @@ const Sidebar = () => {
                 <Link to="/invite" className="list-group-item list-group-item-action">Invite</Link>
                 <Link to="/user_wallets" className="list-group-item list-group-item-action">User Wallets</Link>
                 <Link to="/create_wallet" className="list-group-item list-group-item-action">Create wallet</Link>
+                <Link to="/cross_border_payment" className="list-group-item list-group-item-action">Cross-Border Payment</Link>
                 <button className="list-group-item list-group-item-action" onClick={(e) => onLogoutClick(e)}>Logout <FontAwesomeIcon icon={faSignOutAlt} /></button>
             </div>
         </div>
