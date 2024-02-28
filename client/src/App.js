@@ -23,7 +23,7 @@ import Invite from "./components/pages/Invite";
 import UserWallets from "./components/pages/UserWallets";
 import CreateWallet from "./components/pages/CreateWallet";
 import WalletTransactions from "./components/pages/WalletTransactions";
-import WalletBalaces from "./components/pages/WalletBalaces";
+import WalletBalances from "./components/pages/WalletBalances";
 import CrossBorderPayment from "./components/pages/CrossBorderPayment";
 
 if (localStorage.jwtToken) {
@@ -55,7 +55,7 @@ class App extends Component {
                                 <PrivateRoute exact path="/user_wallets" component={UserWallets} />
                                 <PrivateRoute exact path="/create_wallet" component={CreateWallet} />
                                 <PrivateRoute exact path="/wallet_transactions/:wallet" component={WalletTransactions} />
-                                <PrivateRoute exact path="/wallet_balances/:wallet" component={WalletBalaces} />
+                                <PrivateRoute exact path="/wallet_balances/:wallet" component={WalletBalances} />
                                 <PrivateRoute exact path="/cross_border_payment" component={CrossBorderPayment} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
